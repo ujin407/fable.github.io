@@ -1,0 +1,23 @@
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix dc:   <http://purl.org/dc/elements/1.1/> .
+@prefix ex:   <http://example.org/fable#> .
+
+# 이야기
+ex:기러기와여우
+    rdf:type ex:Fable ;
+    dc:title "기러기와 여우" ;
+    ex:hasCharacter ex:기러기 ;
+    ex:hasCharacter ex:여우 ;
+    ex:hasMoral "지혜와 신중함의 중요성" .
+
+# 등장인물: 기러기
+ex:기러기
+    rdf:type ex:AnimalCharacter ;
+    ex:hasTrait "지혜로움" ;
+    ex:avoidsTrickOf ex:여우 .
+
+# 등장인물: 여우
+ex:여우
+    rdf:type ex:AnimalCharacter ;
+    ex:hasTrait "교활함" ;
+    ex:triesToDeceive ex:기러기 .

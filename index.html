@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>기러기와 여우 - 동화 시각화</title>
+    <!-- Cute Korean Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #FFB7B2;
+            --secondary-color: #B5EAD7;
+            --text-color: #555;
+            --card-bg: #fff;
+        }
+
+        body {
+            font-family: 'Jua', sans-serif;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            background-color: #fce4ec;
+            /* Fallback */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: #ff8a80;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 0px #fff;
+            animation: bounce 2s infinite;
+        }
+
+        .stage {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 50px;
+            position: relative;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .character-card {
+            background: var(--card-bg);
+            border-radius: 25px;
+            padding: 20px;
+            width: 250px;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .character-card:hover {
+            transform: scale(1.05) translateY(-10px);
+        }
+
+        .character-img {
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+            border-radius: 50%;
+            background-color: #fff9c4;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 3px solid #ffcc80;
+        }
+
+        .fox-img {
+            background-color: #ffccbc;
+            border-color: #ffab91;
+        }
+
+        .goose-img {
+            background-color: #b3e5fc;
+            border-color: #81d4fa;
+        }
+
+        .name {
+            font-size: 1.8rem;
+            margin: 5px 0;
+            color: #333;
+        }
+
+        .trait {
+            font-size: 1.2rem;
+            color: #888;
+            background-color: #f5f5f5;
+            padding: 5px 15px;
+            border-radius: 15px;
+            display: inline-block;
+        }
+
+        /* Arrows/Relations */
+        .relations {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+            z-index: 1;
+        }
+
+        .arrow-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .arrow {
+            width: 100px;
+            height: 4px;
+            background-color: #bdbdbd;
+            position: relative;
+        }
+
+        .arrow::after {
+            content: '';
+            position: absolute;
+            right: -5px;
+            top: -5px;
+            border-width: 7px;
+            border-style: solid;
+            border-color: transparent transparent transparent #bdbdbd;
+        }
+
+        .arrow-text {
+            background: #fff;
+            padding: 5px 10px;
+            border-radius: 10px;
+            border: 2px solid #ddd;
+            font-size: 0.9rem;
+        }
+
+        .fox-to-goose .arrow {
+            background-color: #ef9a9a;
+        }
+
+        .fox-to-goose .arrow::after {
+            border-color: transparent transparent transparent #ef9a9a;
+        }
+
+        .fox-to-goose-text {
+            color: #c62828;
+            border-color: #ef9a9a;
+        }
+
+        .goose-to-fox .arrow {
+            background-color: #90caf9;
+        }
+
+        .goose-to-fox .arrow::after {
+            border-color: transparent transparent transparent #90caf9;
+        }
+
+        .goose-to-fox-text {
+            color: #1565c0;
+            border-color: #90caf9;
+        }
+
+        .moral-section {
+            margin-top: 50px;
+            background: #fff;
+            padding: 20px 40px;
+            border-radius: 20px;
+            border: 4px dashed #ffb74d;
+            text-align: center;
+            max-width: 600px;
+            animation: pulse 3s infinite;
+        }
+
+        .moral-title {
+            font-size: 1.5rem;
+            color: #fb8c00;
+            margin-bottom: 10px;
+        }
+
+        .moral-text {
+            font-size: 1.3rem;
+            color: #555;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.02);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Chatbot Styles */
+        .chat-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 350px;
+            height: 500px;
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 4px solid #b2ebf2;
+            z-index: 100;
+            font-family: 'Jua', sans-serif;
+            transition: transform 0.3s ease;
+        }
+
+        .chat-header {
+            background-color: #b2ebf2;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #00838f;
+            font-weight: bold;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .bot-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #fff;
+            border: 2px solid #00838f;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background-color: #e0f7fa;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 15px;
+            font-size: 1rem;
+            line-height: 1.4;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background-color: #fff;
+            color: #333;
+            border-bottom-left-radius: 2px;
+            border: 2px solid #b2ebf2;
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background-color: #FFB7B2;
+            color: #fff;
+            border-bottom-right-radius: 2px;
+        }
+
+        .chat-input-area {
+            padding: 10px;
+            background-color: #fff;
+            display: flex;
+            gap: 10px;
+            border-top: 2px solid #b2ebf2;
+        }
+
+        #userInput {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+            font-family: 'Jua', sans-serif;
+        }
+
+        #userInput:focus {
+            border-color: #FFB7B2;
+        }
+
+        button {
+            background-color: #FFB7B2;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Jua', sans-serif;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background-color: #ff8a80;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stage {
+                flex-direction: column;
+            }
+
+            .relations {
+                flex-direction: row;
+            }
+
+            .chat-container {
+                width: 90%;
+                right: 5%;
+                bottom: 10px;
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1 id="title">이야기 제목</h1>
+
+    <div class="stage">
+        <!-- Goose Card -->
+        <div class="character-card" id="char-1">
+            <img src="goose.png" alt="기러기" class="character-img goose-img">
+            <div class="name">기러기</div>
+            <div class="trait">✨ 지혜로움</div>
+        </div>
+
+        <div class="relations">
+            <div class="arrow-container fox-to-goose">
+                <div class="arrow-text fox-to-goose-text">속이려 함 😈</div>
+                <div class="arrow" style="transform: rotate(180deg);"></div>
+            </div>
+            <div class="arrow-container goose-to-fox">
+                <div class="arrow"></div>
+                <div class="arrow-text goose-to-fox-text">🛡️ 속지 않음</div>
+            </div>
+        </div>
+
+        <!-- Fox Card -->
+        <div class="character-card" id="char-2">
+            <img src="fox.png" alt="여우" class="character-img fox-img">
+            <div class="name">여우</div>
+            <div class="trait">🦊 교활함</div>
+        </div>
+    </div>
+
+    <div class="moral-section">
+        <div class="moral-title">📖 교훈</div>
+        <div class="moral-text" id="moral">교훈 내용</div>
+    </div>
+
+    <!-- Chatbot Section -->
+    <div class="chat-container">
+        <div class="chat-header">
+            <img src="owl.png" alt="Owl Bot" class="bot-avatar">
+            <div class="chat-title">
+                <div>부엉이 선생님</div>
+                <div style="font-size: 0.8rem; font-weight: normal;">무엇이든 물어보세요!</div>
+            </div>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot-message">안녕! 나는 이 이야기의 부엉이 선생님이야. 궁금한 게 있니?</div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="userInput" placeholder="예: 기러기는 왜 안 속았어?" onkeypress="handleKeyPress(event)">
+            <button onclick="sendMessage()">질문하기</button>
+        </div>
+    </div>
+
+    <script>
+        // Data derived from story.ttl
+        const storyData = {
+            title: "기러기와 여우",
+            characters: [
+                {
+                    id: "기러기",
+                    name: "기러기",
+                    type: "AnimalCharacter",
+                    trait: "지혜로움",
+                    icon: "goose.png"
+                },
+                {
+                    id: "여우",
+                    name: "여우",
+                    type: "AnimalCharacter",
+                    trait: "교활함",
+                    icon: "fox.png"
+                }
+            ],
+            moral: "지혜와 신중함의 중요성"
+        };
+
+        // Render Data
+        document.getElementById('title').textContent = storyData.title;
+        document.getElementById('moral').textContent = storyData.moral;
+
+        // Chatbot Logic
+        const chatMessages = document.getElementById('chatMessages');
+        const userInput = document.getElementById('userInput');
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function sendMessage() {
+            const text = userInput.value.trim();
+            if (!text) return;
+
+            // Add User Message
+            addMessage(text, 'user');
+            userInput.value = '';
+
+            // Generate Bot Response
+            setTimeout(() => {
+                const response = generateResponse(text);
+                addMessage(response, 'bot');
+            }, 500);
+        }
+
+        function addMessage(text, sender) {
+            const div = document.createElement('div');
+            div.className = `message ${sender}-message`;
+            div.textContent = text;
+            chatMessages.appendChild(div);
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function generateResponse(question) {
+            // Simple keyword matching for kids
+            const q = question.toLowerCase();
+
+            if (q.includes('안녕')) {
+                return "안녕! 만나서 반가워. 이야기 재미있게 봤니? 👋";
+            }
+
+            // "Why not tricked" variants
+            if ((q.includes('기러기') || q.includes('왜')) && (q.includes('안 속') || q.includes('속지') || q.includes('피했') || q.includes('안속'))) {
+                return "기러기는 정말 지혜롭기 때문이란다! ✨ 여우가 꾀를 부려도 침착하게 생각해서 속지 않았어.";
+            }
+
+            if (q.includes('여우') && (q.includes('성격') || q.includes('어때') || q.includes('나빠') || q.includes('특징'))) {
+                return "여우는 아주 교활해. 🦊 다른 친구들을 속이려고 하니 조심해야 해!";
+            }
+
+            if (q.includes('기러기') && (q.includes('성격') || q.includes('어때') || q.includes('착해') || q.includes('특징'))) {
+                return "기러기는 지혜롭고 신중한 친구야. 🦢 항상 생각하고 행동한단다.";
+            }
+
+            if (q.includes('교훈') || q.includes('배울') || q.includes('주제') || q.includes('느낀')) {
+                return "이 이야기는 우리에게 '지혜와 신중함'이 얼마나 중요한지 알려주고 있어. 📚";
+            }
+
+            if (q.includes('이름') || q.includes('누구') || q.includes('너는')) {
+                return "나는 부엉이 선생님이야! 🦉 이야기 속 궁금한 점을 설명해주고 있지.";
+            }
+
+            // Fallback
+            return "음, 그건 조금 어려운 질문인걸? 🤔 하지만 기러기의 지혜로움을 생각해보면 답을 알 수 있을지도 몰라! '기러기는 왜 안 속았어?'라고 물어봐줄래?";
+        }
+    </script>
+</body>
+
+</html>
